@@ -1,3 +1,12 @@
+
+<p align="center">
+  <img src="assets/remesa1600logo.png" width="700" alt="reMESA logo">
+</p>
+
+<p align="center">
+  <img src="https://stone.professorlee.work/api/stone/reMESA-devgroup/SGX535-reMESA" alt="Stone Badge">
+</p>
+
 # reMESA
 
 Hey! I'm Gama. I started with one old PowerVR GPU and somehow ended up with two. Welcome to reMESA: an independent effort to understand the SGX535 and SGX544 and eventually give them usable open graphics drivers.
