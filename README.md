@@ -127,14 +127,34 @@ For **SGX535**, the next steps are general Mesa draws, textures, shaders and res
 
 For **SGX544**, I need to understand more of the compiler and hardware interfaces, then establish memory and submission contracts before attempting independent GPU execution and verified readback on physical hardware. The [research roadmap](projects/sgx544/docs/ROADMAP.md) has the details. No pretend triangles.
 
-<img src="assets/pipocawaitingyou.gif" width="100" alt="Pipoca waiting for contributors">
-
-Have compatible hardware, references, test results or driver experience? Issues and contributions are welcome. Please include the device, kernel, commands and evidence, and tell us whether the result was CPU-only or ran on the GPU. Keep track of where material came from, and please don't contribute proprietary driver code or binaries unless you have the right to redistribute them.
+<table>
+  <tr>
+    <td width="110" valign="middle">
+      <img src="assets/pipocawaitingyou.gif" width="100" alt="Pipoca waiting for contributors">
+    </td>
+    <td valign="middle">
+      Have compatible hardware, references, test results or driver experience?
+      Issues and contributions are welcome. Please include the device,
+      kernel, commands and evidence, and tell us whether the result was
+      CPU-only or ran on the GPU. Keep track of where material came from,
+      and please don't contribute proprietary driver code or binaries
+      unless you have the right to redistribute them.
+    </td>
+  </tr>
+</table>
 
 Thanks to Simon Fenney, e1zo, Alex (Poulsback), Garnet, monocasa, nicman24, intelminer, Incogninto, everyone sharing evidence, and of course Pipoca. The [original README](docs/history/README-SGX535-20261105.md) has the full thanks and more of the story.
 
-<img src="assets/pipocaidle.gif" width="100" alt="Pipoca resting">
-
-The goal is serious. The documentation doesn't always have to be.
-
-— Gama
+<table>
+  <tr>
+    <td width="110" valign="middle">
+      <img src="assets/pipocaidle.gif" width="100" alt="Pipoca resting">
+    </td>
+    <td valign="middle">
+      The goal is serious. The documentation doesn't always have to be.
+      <br>
+      <br>
+      — Gama
+    </td>
+  </tr>
+</table>
