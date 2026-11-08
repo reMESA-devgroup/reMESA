@@ -1,9 +1,6 @@
-
 <p align="center">
-  <img src="assets/remesa1600logo.png" width="700" alt="reMESA logo">
-</p>
-
-<p align="center">
+  <img src="assets/remesa1600logo.png" width="550" alt="reMESA logo">
+  &nbsp;&nbsp;
   <img src="https://stone.professorlee.work/api/stone/reMESA-devgroup/SGX535-reMESA" alt="Stone Badge">
 </p>
 
