@@ -9,7 +9,7 @@
   &nbsp;&nbsp;&nbsp;
   <img
     src="https://stone.professorlee.work/api/stone/reMESA-devgroup/SGX535-reMESA"
-    width="115"
+    width="50"
     alt="Stone Badge"
     valign="middle"
   >
@@ -17,9 +17,9 @@
 
 # reMESA
 
-Hey! I'm Gama. I started with one old PowerVR GPU and somehow ended up with two. Welcome to reMESA: an independent effort to understand the SGX535 and SGX544 and eventually give them usable open graphics drivers.
+Hey! I'm Gama. I started with onde GPU (Intel Poulsbo) and somehow ended up with two. Welcome to reMESA: an independent effort to understand the GMA500 (SGX535) and SGX544 and eventually give them usable open graphics drivers.
 
-Pipoca says hello too. She has witnessed an unreasonable amount of hexadecimal.
+Pipoca says hello too.
 
 <table>
   <tr>
