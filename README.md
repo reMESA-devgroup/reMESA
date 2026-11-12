@@ -6,14 +6,6 @@
     alt="reMESA logo"
     valign="middle"
   >
-  &nbsp;&nbsp;&nbsp;
-  <img
-    src="https://stone.professorlee.work/api/stone/reMESA-devgroup/SGX535-reMESA"
-    width="50"
-    alt="Stone Badge"
-    valign="middle"
-  >
-</p>
 
 # reMESA
 
@@ -158,3 +150,10 @@ Thanks to Simon Fenney, e1zo, Alex (Poulsback), Garnet, monocasa, nicman24, inte
     </td>
   </tr>
 </table>
+  <img
+    src="https://stone.professorlee.work/api/stone/reMESA-devgroup/SGX535-reMESA"
+    width="70"
+    alt="Stone Badge"
+    valign="middle"
+  >
+</p> 
