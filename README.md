@@ -8,8 +8,7 @@
   >
 
 # reMESA
-Hey! I'm Gama. I started with onee GPU (Intel Poulsbo) and somehow ended up with two. Welcome to reMESA: an independent effort to understand the GMA500 (SGX535) and SGX544 and eventually give them usable open graphics drivers.
-MADE IN GALAXY TAB S7. (yes)
+Hey! I'm Gama. I started with one GPU (Intel Poulsbo) and somehow ended up with two. Welcome to reMESA: an independent effort to understand the GMA500 (SGX535) and SGX544 and eventually give them usable open graphics drivers, most unprofessional driver made in Galaxy Tab S7.
 
 Pipoca says hello too.
 
@@ -22,11 +21,11 @@ Pipoca says hello too.
 
 ## Why are we doing this?
 
-Intel Poulsbo machines can still display a Linux desktop, but `gma500` alone doesn't provide a modern open SGX 3D stack (yet). The SGX544 has its own platform and driver history, including Android graphics components. Public programming information is limited for both. So I've been digging.
+Intel Poulsbo machines can still display a Linux desktop, but `gma500` alone doesn't provide a modern open SGX 3D stack (yet hehe). The SGX544 has its own platform and driver history, including Android graphics components. Public programming information is limited for both. So I've been digging.
 
 Both projects are here because I want to understand these chips and build open graphics support for them. That doesn't mean they speak the same language: their command formats and hardware interfaces need their own evidence, even when a general tool can be shared.
 
-The SGX535 project started on September 16, 2026. Since then I've been studying historical drivers, compiler behavior and hardware captures, writing independent code, and testing on a Dell Mini 12. Some discoveries took hours. `0x07000345` took a lot longer. **ALWAYS.**
+The SGX535 project started on September 16, 2026. Since then I've been studying historical drivers, compiler behavior and hardware captures, writing independent code, and testing on a Dell Mini 12. Some discoveries took hours. `0x07000345` took a lot, lot, lot, LOT longer. **ALWAYS.**
 
 <table>
   <tr>
@@ -73,7 +72,7 @@ The [SGX544 research](projects/sgx544/README.md) follows the original GLES shade
 
 The starting point was an Android driver archive, including an x86 32-bit GLES library. Static analysis traced `glCompileShader` to a compiler callback and the lookup of `GLSLCompileToUniflex`; it also found UniPatch setup. The matching compiler wasn't in that archive. Where UniFlex becomes final USSE, and how this device submits work and manages GPU memory, still need answers. See the [findings and their evidence limits](projects/sgx544/docs/FINDINGS.md).
 
-Special thanks to **Incogninto** for sharing the Android driver binaries that made this investigation possible. The research repository does not redistribute those proprietary libraries.
+Special thanks to contributor **Incogninto** for sharing the Android driver binaries that made this investigation possible. The research repository does not redistribute those proprietary libraries (just install device firmware)
 
 ## How the pieces fit
 
@@ -95,7 +94,7 @@ Mesa supplies the OpenGL frontend; Gallium provides an interface through which a
 
 GEM manages graphics buffers on the kernel side, and the GPU MMU maps the addresses used by the GPU. The implementation has to keep those mappings and their owners valid while work is in flight; getting the pixels right once isn't enough if the next draw uses freed memory.
 
-USSE is the shader instruction architecture being investigated. PDS programs participate in preparing and delivering data and tasks to the GPU. GLSL and UniFlex belong to compiler paths studied in the original software; their exact relationship to final instructions must be established from evidence. These terms are not interchangeable, and neither are the two GPUs' encodings.
+USSE is the shader instruction architecture being investigated. PDS (aka: hell) programs participate in preparing and delivering data and tasks to the GPU. GLSL and UniFlex belong to compiler paths studied in the original software; their exact relationship to final instructions must be established from evidence. These terms are not interchangeable, and neither are the two GPUs' encodings.
 
 ## Where to look
 
@@ -104,7 +103,7 @@ USSE is the shader instruction architecture being investigated. PDS programs par
 - [`projects/sgx544/`](projects/sgx544/) preserves the SGX544 README, notes, tools and test materials in their original relative layout. Its upstream history is [available separately](https://github.com/reMESA-devgroup/SGX544-reMESA), including the imported revision `a3398a5a2ccc03b7778932219ccb2ea71aa950cc`.
 - [`tools/`](tools/) and [`checkpoints/`](checkpoints/) include existing tests and historical artifacts. Follow each guide's prerequisites; physical experiments are hardware-specific and some private test bundles are not published.
 
-For now, I'm keeping hardware-specific code separate. Both names start with SGX, but that's not enough reason to make them share a backend.
+For now, I'm keeping hardware-specific code separate. Both names start with SGX, but that's not enough reason to make them share a backend (correct)
 
 ## Next steps and contributing
 
@@ -115,7 +114,7 @@ For now, I'm keeping hardware-specific code separate. Both names start with SGX,
   </tr>
 </table>
 
-For **SGX535**, the next steps are general Mesa draws, textures, shaders and resource lifetime, followed by broader OpenGL coverage, a responsive accelerated desktop and application testing. OpenGL ES 2.0, desktop OpenGL 2.1, video acceleration and an installable beta are goals, not finished features.
+For **SGX535**, the next steps are general Mesa draws, textures, shaders and resource lifetime, followed by broader OpenGL coverage, a responsive accelerated desktop and application testing. OpenGL ES 2.0, desktop OpenGL 2.1, video acceleration and an installable beta are goals, not finished features, enhanced sgx535 (GMA600) also in plans
 
 For **SGX544**, I need to understand more of the compiler and hardware interfaces, then establish memory and submission contracts before attempting independent GPU execution and verified readback on physical hardware. The [research roadmap](projects/sgx544/docs/ROADMAP.md) has the details. No pretend triangles.
 
@@ -135,7 +134,7 @@ For **SGX544**, I need to understand more of the compiler and hardware interface
   </tr>
 </table>
 
-Thanks to Simon Fenney, e1zo, Alex (Poulsback), Garnet, monocasa, nicman24, intelminer, Incogninto, everyone sharing evidence, and of course Pipoca. The [original README](docs/history/README-SGX535-20261105.md) has the full thanks and more of the story.
+Thanks to Simon Fenney, e1zo, Alex, Garnet, monocasa, nicman24, intelminer, Incogninto, everyone sharing evidence, and of course Pipoca. The [original README](docs/history/README-SGX535-20261105.md) has the full thanks and more of the story.
 
 <table>
   <tr>
@@ -143,7 +142,7 @@ Thanks to Simon Fenney, e1zo, Alex (Poulsback), Garnet, monocasa, nicman24, inte
       <img src="assets/pipocaidle.gif" width="100" alt="Pipoca resting">
     </td>
     <td valign="middle">
-      The goal is serious. The documentation doesn't always have to be.
+      The goal is serious. The documentation and commit messages doesn't always have to be
       <br>
       <br>
       — Gama
@@ -152,7 +151,7 @@ Thanks to Simon Fenney, e1zo, Alex (Poulsback), Garnet, monocasa, nicman24, inte
 </table>
   <img
     src="https://stone.professorlee.work/api/stone/reMESA-devgroup/SGX535-reMESA"
-    width="70"
+    width="110"
     alt="Stone Badge"
     valign="middle"
   >
