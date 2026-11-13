@@ -8,8 +8,8 @@
   >
 
 # reMESA
-
-Hey! I'm Gama. I started with onde GPU (Intel Poulsbo) and somehow ended up with two. Welcome to reMESA: an independent effort to understand the GMA500 (SGX535) and SGX544 and eventually give them usable open graphics drivers.
+Hey! I'm Gama. I started with onee GPU (Intel Poulsbo) and somehow ended up with two. Welcome to reMESA: an independent effort to understand the GMA500 (SGX535) and SGX544 and eventually give them usable open graphics drivers.
+MADE IN GALAXY TAB S7. (yes)
 
 Pipoca says hello too.
 
@@ -22,7 +22,7 @@ Pipoca says hello too.
 
 ## Why are we doing this?
 
-Intel Poulsbo machines can still display a Linux desktop, but `gma500` alone doesn't provide a modern open SGX 3D stack. The SGX544 has its own platform and driver history, including Android graphics components. Public programming information is limited for both. So I've been digging.
+Intel Poulsbo machines can still display a Linux desktop, but `gma500` alone doesn't provide a modern open SGX 3D stack (yet). The SGX544 has its own platform and driver history, including Android graphics components. Public programming information is limited for both. So I've been digging.
 
 Both projects are here because I want to understand these chips and build open graphics support for them. That doesn't mean they speak the same language: their command formats and hardware interfaces need their own evidence, even when a general tool can be shared.
 
