@@ -1,0 +1,68 @@
+{
+  "checkpoint_date": "2026-11-13",
+  "target_version": "0.0.9-beta.0",
+  "release_published": false,
+  "documentation_only": true,
+  "latest_implementation_included": false,
+  "normal_applications_qualified": false,
+  "OpenGL_2_1_complete": false,
+  "accelerated_desktop_qualified": false,
+  "desktop_target": {
+    "width": 1280,
+    "height": 800,
+    "FPS_target": 50,
+    "FPS_qualified": false
+  },
+  "Minecraft": {
+    "version": "Beta1.7.3",
+    "first_beta_target": "open game and GPU-rendered menus",
+    "qualified": false,
+    "world_entry_deferred": true
+  },
+  "driver_family": "gma500",
+  "default_driver_changed": false,
+  "system_activation_qualified": false,
+  "actual_target_caps": {
+    "DUMB_BUFFER": 1,
+    "PRIME": 0,
+    "ADDFB2_MODIFIERS": 0,
+    "SYNCOBJ": 0
+  },
+  "receipts": [
+    {
+      "id": "gallium-callback-cpu-clear-20261112",
+      "classification": "physical_GPU_and_original_driver_recovery",
+      "status": "GALLIUM_CALLBACK_CPU_CLEAR_REAL_MINI12_AND_STOCK_RECOVERY_PASS",
+      "receipt_sha256": "d4ca3b6dcfeef7b41066411f7c3aea699765f575f799e36c9caab1689e24d5f4",
+      "raw_bundle_published": false
+    },
+    {
+      "id": "shm-present-20261113",
+      "classification": "physical_CPU_X11_publication_no_GPU",
+      "status": "REAL_MINI12_X11_1280_SHM_PUBLICATION_AND_IDLE_PASS",
+      "receipt_sha256": "ba53e5114732e85b519170d86b182006f90b57d3f098bab0120d72625db3e15d",
+      "raw_bundle_published": false
+    },
+    {
+      "id": "normal-app-draw-20261113",
+      "classification": "modeled_NIR_Gallium_provider_no_GPU",
+      "status": "CONTINUOUS_GALLIUM_DRAW_VBO_MODELS_PASS_NORMAL_APPLICATIONS_PENDING",
+      "receipt_sha256": "28377fa2446c882ad6a81322080c4f1d24099ce8b3e0f0e7e73b287f7a833024",
+      "raw_bundle_published": false
+    },
+    {
+      "id": "gallium-frontbuffer-20261113",
+      "classification": "modeled_frontbuffer_and_SHM_no_GPU",
+      "status": "GALLIUM_FRONTBUFFER_AND_ASYNC_SHM_SINK_MODELS_PASS_NORMAL_DRI_PENDING",
+      "receipt_sha256": "dffad1cea840981722138ddaa3860ea73b4b69946d286e984e77ed6ed003acae",
+      "raw_bundle_published": false
+    },
+    {
+      "id": "dri-buffer-exchange-20261113",
+      "classification": "modeled_public_GEM_plus_read_only_physical_capabilities",
+      "status": "PUBLIC_LEGACY_DISPLAY_TRANSPORT_OFFLINE_PASS_PHYSICAL_CAPS_CONFIRMED_DRI_PENDING",
+      "receipt_sha256": "308a7fc2893e455cb36f197295799a2563e92e9aa107f7dc6a75e4d8ec340846",
+      "raw_bundle_published": false
+    }
+  ]
+}

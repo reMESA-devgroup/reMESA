@@ -5,6 +5,8 @@ guide. The detailed phase records remain available for reverse engineers.
 
 [Current milestone status](CURRENT-STATUS.json) is also available as JSON.
 
+For the latest SGX535 development checkpoint, read the [November 13 beta status](phase9/BETA-STATUS-20261113.md) and its [scoped evidence summary](phase9/BETA-STATUS-20261113.json). It distinguishes physical GPU results, CPU-only X11 publication and simulated integration tests; it is not a driver release.
+
 ## Reproduce a result
 
 - [Triangle](reproduction/TRIANGLE.md): the first nonzero SGX readback.

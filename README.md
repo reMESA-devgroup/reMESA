@@ -46,6 +46,23 @@ The SGX535 project started on September 16, 2026. Since then I've been studying 
 | Limitations | General OpenGL, desktop acceleration and packaging remain incomplete | Compiler, command submission and hardware execution remain research |
 | Code and notes | [Mesa](mesa/sgx535/), [kernel](kernel/remesa/), [documentation](docs/) | [SGX544 project](projects/sgx544/) |
 
+## SGX535 beta status — November 13, 2026
+
+**The accelerated desktop/Minecraft beta is not released yet.** The target is
+1280×800 X11 with measured responsiveness and a 50 FPS goal, plus Minecraft
+Beta 1.7.3 opening and rendering its menus on the SGX535. Normal application
+admission, DRI2 buffer exchange and system activation still need qualification.
+
+Recent work includes physically checked CPU clears between restricted GPU
+draws, faster **CPU-only** X11 SHM publication, and locally tested persistent
+context/render/presentation integration. The 120-frame continuous callback
+result is a model test, not 120 new hardware frames. OpenGL 2.1 completeness
+and stable 50 FPS are not established.
+
+See the [beta checkpoint](docs/phase9/BETA-STATUS-20261113.md) for confirmed
+results, limitations and remaining work. This update publishes documentation;
+the latest implementation and private test bundles are not included in it.
+
 ## What actually worked on SGX535
 
 <table>

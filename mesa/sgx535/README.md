@@ -1,5 +1,7 @@
 # Native Gallium adapter
 
+The [November 13 beta checkpoint](../../docs/phase9/BETA-STATUS-20261113.md) describes the latest local context/session, continuous draw, presentation and legacy display-storage work. Those implementation changes are not part of this documentation-only update. Normal DRI admission remains closed; the privileged sampled profile and simulated tests do not establish normal application support or OpenGL 2.1 completeness. The adapter notes below retain their historical scope.
+
 > **Historical adapter notes.** Later restricted original GLXGears hardware results are documented in the [October 27 physical status](../../docs/phase9/PHYSICAL-GLX-STATUS-20261027.md). Statements below about unsupported execution describe this earlier path/checkpoint; they are not a current project-wide hardware status or general OpenGL conformance claim.
 
 The [bound Gallium/NIR physical qualification](../../docs/gallium-physical-qualification.md) records the newer1280x800/640x640 frontend-to-GPU path and its limits.
