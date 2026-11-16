@@ -1,558 +1,283 @@
+# reMESA — Source Provenance, Reverse Engineering and Audit
 
-# reMESA — Source Provenance and Clean-Room Audit
-
-> **Status:** Public provenance record — independent audit pending  
+> **Status:** Public research provenance record; independent implementation and licensing audit pending  
 > **Project:** [reMESA](https://github.com/reMESA-devgroup/reMESA)  
-> **Target:** PowerVR SGX535 / Intel Poulsbo / SGX535 rev121  
-> **Reference hardware:** Dell Inspiron Mini 12  
-> **Last updated:** 2026-11-16
+> **Primary target:** PowerVR SGX535, Intel Poulsbo, revision 121  
+> **Reference device:** Dell Inspiron Mini 12 (Intel Atom Z520)  
+> **Document date:** 2026-11-16
 
-## 1. Purpose
+## 1. Purpose and scope
 
-This document records the origins, licensing considerations, reverse-engineering methods, AI assistance, and technical evidence associated with reMESA.
+This document records the origins, use, restrictions and uncertainty associated with the historical source code, vendor binaries, research tools, AI assistance and experimental evidence consulted during reMESA development. It is intended to help maintainers and prospective reviewers trace technical claims to their supporting material.
 
-The purpose is to make the research and implementation history traceable, reproducible, and independently auditable.
+**This is not an independent clean-room certification, legal opinion, or proof that every implementation file has been audited.** Public availability does not itself grant reuse or redistribution rights. A successful hardware experiment does not establish copyright provenance.
 
-**This document is not a legal certification or proof that a complete independent clean-room audit has been performed.**
+The provenance of the SGX535 driver and the separate SGX544 research effort must not be conflated. See `projects/sgx544/docs/PROVENANCE.md` for the latter.
 
-Public availability does not automatically grant permission to copy, modify, or redistribute software. Hardware correctness and source-code provenance are separate questions.
+## 2. Research and implementation boundaries
 
-## 2. Provenance principles
+The project aims to:
 
-reMESA aims to follow these principles:
+1. Identify historical material by repository, commit, path, version and hash.
+2. Distinguish historical facts, inferred architecture, offline models and physical GPU observations.
+3. Keep vendor implementations and restricted materials separate from new driver implementation.
+4. Preserve original copyright and licensing notices.
+5. Record LLM assistance rather than implying exclusively human authorship.
+6. Avoid treating decompiled vendor code, model output or a public mirror as automatically reusable source.
+7. Expose unresolved questions for independent audit instead of asserting that they are closed.
 
-1. Record the origin of historical technical materials.
-2. Preserve source identities, commits, versions, and hashes.
-3. Distinguish observations from implementation code.
-4. Keep restricted materials separate from implementation inputs.
-5. Document uncertainty rather than silently treating hypotheses as facts.
-6. Disclose AI-assisted development.
-7. Require meaningful human accountability and review.
-8. Respect third-party licenses and upstream contribution policies.
-9. Avoid translating or regenerating restricted implementations as a substitute for permission.
-10. Preserve reproducible evidence for technical claims.
+These are stated policies and documented research practices, **not a guarantee that every prior session followed them**.
 
-These are project policies and audit objectives, not claims that every historical contribution has already passed an independent review.
+### Classification vocabulary
 
-## 3. Source classifications
-
-| Classification | Meaning |
+| Class | Meaning |
 |---|---|
-| `PUBLIC-OPEN` | Public source with an identified open-source license |
-| `PUBLIC-RESTRICTED` | Public material with restrictions on use or redistribution |
-| `HISTORICAL-BINARY` | Historical executable or library used as evidence |
-| `MIRROR-UNVERIFIED` | Community mirror without authenticated vendor provenance |
-| `QUARANTINED` | Material excluded from implementation pending review |
-| `ORIGINAL-IMPLEMENTATION` | Code developed specifically for reMESA |
-| `AI-ASSISTED` | Code or documentation created or modified with LLM assistance |
-| `PHYSICAL-EVIDENCE` | Observations recorded on actual hardware |
-| `OFFLINE-EVIDENCE` | Static analysis, models, or tests without target GPU execution |
-| `UNKNOWN` | Origin, licensing, identity, or applicability not established |
+| `PUBLIC-OPEN` | Identified public source with a recorded open-source license; exact file and revision still matter |
+| `PUBLIC-RESTRICTED` | Publicly obtainable material subject to additional restrictions |
+| `MIRROR-UNVERIFIED` | Community-hosted copy not authenticated as an official vendor release |
+| `VENDOR-ORACLE` | Original vendor software queried for comparison or interpretation |
+| `HISTORICAL-BINARY` | Historical executable or library inspected as evidence |
+| `QUARANTINED` | Material excluded from implementation use pending rights/provenance review |
+| `ORIGINAL-IMPLEMENTATION` | reMESA-authored implementation; authorship and inputs still require audit |
+| `AI-ASSISTED` | Work generated, edited, researched or organized with LLM assistance |
+| `PHYSICAL-EVIDENCE` | Observation obtained on the actual target GPU |
+| `OFFLINE-EVIDENCE` | Static inspection, software modeling, or tests without physical GPU execution |
+| `UNKNOWN` | Claim not established by the available evidence |
 
-A material may belong to multiple categories.
+## 3. Historical source inventory
 
-## 4. Linux DRM/GMA500
+### 3.1 Linux DRM/GMA500
 
-**Repository:** https://github.com/gregkh/linux
+- Repository: <https://github.com/gregkh/linux>
+- Recorded historical commit: `d5eca7ebcf6f64c4aebf9684c365c130a3a069b3`
+- Recorded Phase 7 files: `psb_drv.c`, `psb_drv.h`, `psb_device.c`, `power.c`, `psb_irq.c`, `mmu.c`, `accel_2d.c`, `psb_reg.h`, `gtt.c`.
+- Role: Linux kernel architecture, GMA500/DRM interfaces, memory management and hardware integration reference.
+- Qualification: retained source-to-Git-object correspondence does not prove that the Dell's installed module was built from precisely those sources.
 
-**Recorded commit:**
+See `docs/kernel-5.10.240-antix-audit.md`, `docs/phase7/source-index.json` and `docs/phase7/source-provenance.md`.
 
-`d5eca7ebcf6f64c4aebf9684c365c130a3a069b3`
+### 3.2 Texas Instruments / Imagination PowerVR kernel DDK
 
-The Phase 7 source index records:
+- Official source host: <https://git.ti.com/cgit/graphics/omap5-sgx-ddk-linux/>
+- Recorded Poulsbo-capable DDK commit: `cb46ba4d0c900f89f7ec0284f9803d476bfa98de`
+- Recorded SGX535-header commit: `322bcda5f3076037e2e20ef9209f4f4d575a7d5f`
+- Examined source names include `sgx535defs.h`, `sgxerrata.h`, `sgxfeaturedefs.h`, `sgxreset.c`, `sgxinit.c`, `sgxinfo.h`, `sgx_bridge.h`, `bridged_sgx_bridge.c`, `sysconfig.c`, and a Poulsbo D0 build configuration.
 
-- `psb_drv.c`
-- `psb_drv.h`
-- `psb_device.c`
-- `power.c`
-- `psb_irq.c`
-- `mmu.c`
-- `accel_2d.c`
-- `psb_reg.h`
-- `gtt.c`
+The historical `sgx535defs.h` identifies SGX535 and declares MIT/GPLv2 licensing. The recorded Poulsbo build configuration specifies `SGXCORE := 535`, `SGX_CORE_REV := 121`, and `PVR_SYSTEM := poulsbo`.
 
-These files provide historical kernel integration and Poulsbo hardware context.
+**Licensing qualification:** Official TI hosting and an open-license declaration on one file do not automatically establish the rights for every historical revision or neighboring file. The kernel DDK must also be distinguished from proprietary user-mode components. Individual notices, including any historical confidentiality markings, require exact-revision review. Historical source is recorded as research evidence, not presumed to have been transplanted into the new driver.
 
-The project's retained source audit identifies correspondence with historical Git objects.
+See `docs/source-archaeology.md` and `docs/poulsbo-data/sources.json`.
 
-**Limitation:** Historical source correspondence does not prove the exact identity of the installed kernel module.
+### 3.3 Historical Poulsbo kernel
 
-## 5. Texas Instruments PowerVR Kernel DDK
+- Repository: <https://github.com/gregkh/psb-kmp>
+- Commit: `98b5307e5158a9ac401b29128ddd1184ae06b4d7`
+- Recorded files: `psb_drv.c`, `psb_mmu.c`, `psb_xhw.c`.
+- Role: historical memory-management, command and kernel-interface evidence; per-file license and platform scope apply.
 
-**Official repository:**
+### 3.4 Intel EMGD community mirror
 
-https://git.ti.com/cgit/graphics/omap5-sgx-ddk-linux/
+- Repository: <https://github.com/EMGD-Community/intel-binaries-linux>
+- Recorded commit: `e6884ec2eaaf1afe88d5ff9dd44d70403525be5b`
+- Recorded examples: `sgxerrata.h`, `sgx535defs.h`, `sgxreset.c`, `pwr_plb.c`, `emgd_drm.h`.
+- Classification: `MIRROR-UNVERIFIED`.
 
-**Historical Poulsbo-capable DDK commit:**
+The mirror is a research source, not independently authenticated as an Intel release. Mixed source notices must be checked individually. Public mirroring does not establish unrestricted reuse.
 
-`cb46ba4d0c900f89f7ec0284f9803d476bfa98de`
+### 3.5 TI user-mode DDK
 
-**SGX535 header commit:**
+- Official host: <https://git.ti.com/cgit/graphics/omap5-sgx-ddk-um-linux/>
+- Recorded commit: `b6801bf89e00d69893c2957455bbeb3195c0ed52`
+- Example binary: `targetfs/lib/libsrv_init.so.1.9.6.0`
+- Recorded SHA-256: `a1a3572ee4ae6104505808d171d6b4cd023309959588f890b2192aea44fafdda`
 
-`322bcda5f3076037e2e20ef9209f4f4d575a7d5f`
+This is an OMAP5/DRA7xx artifact, not an authenticated Poulsbo userspace stack. The project records metadata inspection; redistribution and implementation reuse require separate review.
 
-Documented files include:
+## 4. Historical proprietary Poulsbo binaries
 
-| File | Purpose |
-|---|---|
-| `sgx535defs.h` | SGX535 hardware definitions |
-| `sgxerrata.h` | Hardware errata |
-| `sgxfeaturedefs.h` | Hardware features |
-| `sgxreset.c` | Historical reset implementation |
-| `sgxinit.c` | Historical initialization |
-| `sgxinfo.h` | SGX information structures |
-| `sgx_bridge.h` | Interface declarations |
-| `bridged_sgx_bridge.c` | Historical bridge implementation |
-| `sysconfig.c` | Poulsbo platform integration |
-| Poulsbo D0 Makefile | SGX535 rev121 build configuration |
+### `psb_dri.so`
 
-The historical source archaeology identifies an SGX535-specific header declaring MIT/GPLv2 licensing.
+- Historical package: `xpsb-glx` 0.18 (`home:lkundrak:poulsbo`)
+- SHA-256: `74ca42991906741ee91be1bc088ae0b142fa71b6a85658c5dad0851ce50dd0d8`
+- Recorded package restriction: redistributable, no modification permitted.
 
-It also identifies a Poulsbo D0 build configuration containing:
+### `Xpsb.so`
 
-- `SGXCORE := 535`
-- `SGX_CORE_REV := 121`
-- `PVR_SYSTEM := poulsbo`
+- Same historical package family.
+- SHA-256: `da531587b1ec59fe433fa20ddd2e691b2f8b7fb35bb82525d4db99259c5e571f`
 
-### Licensing considerations
+These binaries were used as historical static-analysis evidence for interfaces, data layouts and CPU-side behavior. The research records address-level observations and disposable analysis projects; those records are **not** a substitute for a code-level review demonstrating that proprietary implementation code was not incorporated into reMESA.
 
-Texas Instruments publicly hosts the kernel DDK, and TI distribution metadata identifies open licensing for certain kernel DDK releases.
+A package version or matching structure does not authenticate a historical kernel/userspace build pairing.
 
-However:
+See `docs/phase7/psb-dri-re/README.md`, `docs/phase7/source-provenance.md`, and `docs/phase7/xpsb-re/source-provenance.md`.
 
-- Each exact historical revision requires individual review.
-- Copyright notices must be preserved.
-- Licensing cannot be inferred from neighboring files.
-- Kernel-mode licensing does not automatically apply to user-mode binaries.
-- Public hosting does not establish unrestricted reuse rights.
-- Historical confidentiality notices must be evaluated in context.
+### Other historical comparators
 
-**Status:** Official repository provenance established; complete per-file licensing audit pending.
-
-## 6. Historical Poulsbo kernel
-
-**Repository:** https://github.com/gregkh/psb-kmp
-
-**Commit:**
-
-`98b5307e5158a9ac401b29128ddd1184ae06b4d7`
-
-Recorded files:
-
-- `psb_drv.c`
-- `psb_mmu.c`
-- `psb_xhw.c`
-
-These provide historical context for memory management, driver architecture, and command submission.
-
-Historical implementation details are not automatically applicable to the current hardware configuration.
-
-## 7. Intel EMGD community mirror
-
-**Repository:**
-
-https://github.com/EMGD-Community/intel-binaries-linux
-
-**Commit:**
-
-`e6884ec2eaaf1afe88d5ff9dd44d70403525be5b`
-
-Recorded materials:
-
-- `drm/pvr/services4/srvkm/hwdefs/sgxerrata.h`
-- `drm/pvr/services4/srvkm/hwdefs/sgx535defs.h`
-- `drm/pvr/services4/srvkm/devices/sgx/sgxreset.c`
-- `drm/emgd/state/power/plb/pwr_plb.c`
-- `drm/include/emgd_drm.h`
-
-These are publicly retained historical source snapshots.
-
-The community mirror is not treated as an authenticated official Intel release.
-
-**Status:** `MIRROR-UNVERIFIED`
-
-The applicable copyright notices and redistribution rights require individual review.
-
-## 8. TI user-mode DDK
-
-**Repository:**
-
-https://git.ti.com/cgit/graphics/omap5-sgx-ddk-um-linux/
-
-**Commit:**
-
-`b6801bf89e00d69893c2957455bbeb3195c0ed52`
-
-Recorded materials:
-
-- `README`
-- `targetfs/lib/libsrv_init.so.1.9.6.0`
-
-SHA-256 of the historical binary:
-
-`a1a3572ee4ae6104505808d171d6b4cd023309959588f890b2192aea44fafdda`
-
-This is an OMAP5/DRA7xx userspace artifact, not an authenticated Poulsbo userspace binary.
-
-The historical record classifies its examination as metadata-only.
-
-**Status:** Historical proprietary binary; separate licensing review required.
-
-## 9. Historical Poulsbo binaries
-
-### 9.1 psb_dri.so
-
-**Package:** `xpsb-glx` 0.18
-
-SHA-256:
-
-`74ca42991906741ee91be1bc088ae0b142fa71b6a85658c5dad0851ce50dd0d8`
-
-The package specification records redistribution restrictions, including no modification.
-
-Documented investigation methods include:
-
-- Static ELF inspection
-- Symbol and offset inventories
-- Ghidra analysis
-- Targeted disassembly
-- Historical ABI comparison
-- CPU-side command analysis
-
-The research records distinguish derived observations from implementation code.
-
-### 9.2 Xpsb.so
-
-SHA-256:
-
-`da531587b1ec59fe433fa20ddd2e691b2f8b7fb35bb82525d4db99259c5e571f`
-
-Documented investigation topics include:
-
-- Initialization
-- Shared structures
-- Buffer-object operations
-- Command-related fields
-- Synchronization
-- Historical communication interfaces
-
-The original binary's build relationship with historical kernel packages has not been fully authenticated.
-
-### Static-analysis boundary
-
-Historical records describe disposable Ghidra projects and temporary decompilation outputs kept outside implementation code.
-
-This describes the documented methodology; it is not an independent certification of every development session.
-
-## 10. Additional historical packages
-
-| Package | Version | Role |
+| Material | Version | Recorded role |
 |---|---|---|
-| `libdrm-poulsbo` | 2.3.0 | Historical DRM ABI |
-| `xserver-xorg-video-psb` | 0.32.0 | Historical Xorg implementation |
-| PSB kernel source | 4.41.1 | Candidate kernel source |
-| PSB firmware | 0.30-4 | Firmware package inventory |
-| MesaLib | 7.4.4 | Public Mesa comparator |
+| `libdrm-poulsbo` | 2.3.0 | Historical userspace/kernel ABI |
+| `xserver-xorg-video-psb` | 0.32.0 | Historical Xorg driver behavior |
+| PSB kernel source | 4.41.1 | Candidate historical kernel interface |
+| PSB firmware | 0.30-4 | Package inventory; not proof of SGX render firmware dependence |
+| MesaLib | 7.4.4 | Public Mesa ABI/layout comparator |
 
-Detailed package hashes and licensing information:
+Exact archive hashes, provenance and restrictions are recorded in `docs/phase7/xpsb-re/source-provenance.md`.
 
-`docs/phase7/xpsb-re/source-provenance.md`
+## 5. Original Imagination USSE decoder accessed through a research shim
 
-These sources are not assumed to form an authenticated, exactly matched historical driver stack.
+**This is a vendor-backed decoder, not an independently implemented open-source USSE disassembler.**
 
-## 11. Restricted and quarantined materials
+### 5.1 Acquisition and origin: separate claims
 
-### 11.1 Canonical libgl1-mesa-dri-psb
+The developer reports obtaining the relevant decompiler/decoder research material through the **`sgx540-reversing` repository**. This is the reported **acquisition route**, not a claim that `sgx540-reversing` authored the underlying decoder. The exact repository URL, revision, distributed file and license terms still need to be added to the source ledger and independently checked.
 
-**Package:** `libgl1-mesa-dri-psb`
+The supplied `SGX535-rev121-USSE-disassembler.zip` identifies the executable actually invoked as an **original Imagination Technologies Series5 GLSL ES compiler from PowerVR SDK 3.5**, Linux x86 32-bit:
 
-**Version:** `0.24+repack+0038.1`
+- Included executable: `GLSLESCompiler_Series5-sdk35`
+- Vendor SDK URL recorded in the package: <https://cdn.imgtec.com/sdk/OFFLINE/PowerVRSDKSetup-3.5.run-x86>
+- Executable SHA-256 recorded in the package: `9349ed4d7643d81cb638b41eb41b69507cc2f9f15bae14c8f2116e79f70e7bd9`
+- Acquisition route reported by developer: `sgx540-reversing` (exact repository identity and revision **PENDING**).
 
-**Historical source:** Canonical `hardy-dell-mini`
+The SDK URL is an **origin claim recorded by the packaged README**, not proof that the particular executable in the archive was independently downloaded from that URL during this audit. The developer's acquisition account and the package's SDK-origin statement can both be true, but their relationship has not yet been independently reconstructed.
 
-Package SHA-256:
+### 5.2 What the shim does
 
-`14e870f4273e84759630499efeda4948116c29f3ba7d08e2b5f028a5da3ef8a2`
+The supplied archive includes:
 
-Extracted ELF SHA-256:
+- `sdk35_decoder_preload.c` — C shim source.
+- `sdk35_decoder_preload.so` — compiled preload library.
+- `disassemble.py` — Python launcher.
+- `GLSLESCompiler_Series5-sdk35` — original vendor executable.
+- `runtime/` — bundled i386 glibc runtime components.
+- `hashes.json` and `SHA256SUMS` — integrity records.
+- `README-PT.txt` — package documentation.
+- `example_nop_end.bin` — small example input.
 
-`427627909b0c528d154d1b247688f16536162a520d43d472e8a4f404c02e2a6e`
+The C shim intercepts `__libc_start_main` through `LD_PRELOAD` and substitutes a research entry point. It checks a hard-coded SDK descriptor at `0x082d2a88` and calls an internal decoder function at `0x0829921b` **inside the original vendor executable**. These are binary-specific internal addresses, not supported public SDK interfaces or GPU addresses.
 
-The historical investigation records an original-content notice identifying Intel confidentiality and reserved rights.
+The tool accepts little-endian USSE instruction words, eight bytes per instruction, with a documented limit of 1–512 instructions per call. The shim checks output canaries and termination; the launcher verifies package hashes and imposes an execution timeout. The supplied README describes use with an i386 runtime or QEMU on ARM Linux.
 
-According to the project report:
+The selected descriptor identifies **SGX535 revision 121**, not a fabricated SGX540 context. The textual result is vendor-decoder output; it is not proof that the instruction will execute correctly on physical SGX535 hardware.
 
-- The package was placed in a disposable quarantine directory.
-- It was not added to the retained reference tree.
-- It was not executed.
-- It was not used for implementation details.
-- Only limited static occurrence and provenance checks were performed.
+### 5.3 What the shim does *not* establish
 
-**Status:** `QUARANTINED`
+- It does **not** make the Imagination decoder open source.
+- It does **not** constitute an independent USSE decoder implementation.
+- It does **not** demonstrate that the vendor executable may be redistributed with reMESA.
+- It does **not** independently prove physical execution or OpenGL correctness.
+- It does **not** by itself establish that the reMESA USSE encoder/compiler is free of restricted code.
+- It does **not** establish that the original vendor decoder implementation was copied into the driver; that requires a separate implementation audit.
 
-The confidentiality notice does not independently establish that the package was leaked or distributed without authorization.
+The provided C shim contains an invocation of a function inside the vendor binary rather than an extracted implementation of that function. This is a narrow, inspectable statement about the supplied shim, **not** a conclusion about every file in the driver.
 
-### 11.2 PSP2 PowerVR sources
+### 5.4 Redistribution and clean-room audit questions
 
-A public PSP2-related repository was examined as a possible research locator.
+The supplied ZIP contains the vendor executable and bundled runtime libraries. The included glibc GPL/LGPL notices govern those components; they do not license the Imagination compiler. The compiler's distribution terms and the rights applicable to the acquisition route require review before public redistribution.
 
-The investigated header contained restrictive Imagination copyright language.
+The implementation audit should determine:
 
-The project records that it was not imported or used to decode the selected SGX535 instructions.
+1. The exact `sgx540-reversing` repository URL, commit, and relevant artifact.
+2. Whether that repository distributed the original binary, an extracted decoder, a script, or only instructions for obtaining it.
+3. Whether the binary in the ZIP matches the official SDK release or a repackaged copy.
+4. Which vendor outputs were used as reference vectors and whether they entered LLM prompts or generated code.
+5. Whether any vendor decoder tables, functions or reconstructed code entered the reMESA implementation.
+6. Which vendor redistribution terms apply to the ZIP and to any published release assets.
 
-**Status:** Restricted research lead; excluded from implementation.
+**Classification:** `VENDOR-ORACLE`, `HISTORICAL-BINARY`, and project-authored research shim; exact acquisition and redistribution rights `PENDING`.
 
-### 11.3 Confidential/NDA search result
+See also `docs/phase9/USSE-VENDOR-ORACLE-20261027.md` and the separately supplied `SGX535-rev121-USSE-disassembler.zip`.
 
-The historical investigation records a result explicitly marked confidential/NDA.
+## 6. Restricted and excluded research materials
 
-According to the report, its contents were not opened.
+### Canonical `libgl1-mesa-dri-psb`
 
-**Status:** Excluded.
+- Version: `0.24+repack+0038.1`
+- Historical package context: Canonical `hardy-dell-mini`
+- Package SHA-256: `14e870f4273e84759630499efeda4948116c29f3ba7d08e2b5f028a5da3ef8a2`
+- Extracted ELF SHA-256: `427627909b0c528d154d1b247688f16536162a520d43d472e8a4f404c02e2a6e`
 
-### Quarantine rules
+The research report records an `Intel Confidential / all rights reserved` notice. It says this package remained in disposable quarantine, was not executed, was not added to `references/`, and was not used for implementation details. Limited static occurrence/provenance checks were recorded.
 
-Restricted or uncertain material must not be incorporated into the implementation without an appropriate rights and provenance review.
+**Status:** `QUARANTINED`. A confidentiality marking alone does not prove unauthorized publication.
 
-Quarantine must not be bypassed through:
+### PSP2 PowerVR repository — inspected, not used
 
-- Copying
-- Mechanical translation
-- Superficial rewriting
-- AI-generated reconstruction of restricted code
-- Unattributed incorporation into patches
+The public `GrapheneCt/PVR_PSP2` repository was briefly checked as a possible PDS decoder locator. The inspected `sgxpdsdefs.h` carried restrictive Imagination copyright language. According to the project research record, no source from this repository was imported, used to decode selected SGX535 instructions, or treated as evidence for Poulsbo hardware behavior.
 
-Historical contact with restricted material must not be concealed.
+**Status:** Unsuccessful research lead; **not an implementation dependency**. This is included for transparency, not to imply that reMESA used PSP2 code.
 
-## 12. Reverse-engineering methodology
+### Other excluded leads
 
-### Historical source archaeology
+The historical report also records a search result explicitly marked Confidential/NDA that was excluded unopened, and a `freemangordon/mesa` historical branch inspected as a research lead without importing its source.
 
-Used to investigate:
+The presence of a research lead in a provenance record does not mean its code was used.
 
-- Register definitions
-- Hardware revisions
-- Kernel interfaces
-- Memory structures
-- Command formats
-- Initialization relationships
-- Platform differences
+## 7. Reverse-engineering and evidence methodology
 
-### Static binary analysis
+Research methods documented across the project include:
 
-Used to investigate:
-
-- ELF symbols
-- Function addresses
-- Data layouts
-- Constants
-- CPU-side command construction
-- Historical ABI behavior
-
-Decompiler output is not treated as authoritative hardware documentation.
-
-### Independent software models
-
-Used to evaluate:
-
-- Packet layouts
-- Relocation constraints
-- Memory boundaries
-- Resource ownership
-- Instruction encodings
-- Error handling
-- Failure conditions
-
-Offline success is not equivalent to physical GPU validation.
-
-### Hardware experiments
-
-Physical tests should identify:
-
-- Hardware and GPU revision
-- Kernel/module version
-- Test input
-- Expected output
-- Actual output
-- GPU submission and retirement
-- Readback
-- Memory guards
-- Recovery behavior
-- Relevant artifact hashes
-
-Physical evidence is valid only within the tested scope.
-
-## 13. Evidence terminology
-
-| Term | Meaning |
-|---|---|
-| `CONFIRMED` | Established within the stated evidence scope |
-| `INFERRED` | Supported by reasoning but not directly established |
-| `UNKNOWN` | Not established |
-| `BLOCKED` | Qualification or operation cannot proceed |
-| `PASS` | Defined test passed |
-| `FAIL` | Defined test failed |
-
-A successful isolated rendering operation must not be represented as complete OpenGL conformance.
-
-## 14. AI-assisted development
-
-reMESA uses substantial AI assistance.
-
-Documented uses include:
-
-- Source archaeology
-- Searching historical code
-- Comparing implementations
-- Organizing findings
-- Drafting documentation
-- Software development and debugging assistance
-
-### Transparency
-
-AI-generated and AI-modified code must not be represented as independently human-authored when that would misstate its provenance.
-
-The project does not claim that LLM training data can be fully reconstructed or that generated code is guaranteed free from proprietary-code influence.
-
-### Required audit
-
-Before upstream submission, the following questions should be addressed:
-
-1. Which files contain AI-generated or AI-modified implementation code?
-2. Which tools and models were used, where records exist?
-3. Which historical materials entered model context?
-4. Did restricted or quarantined materials enter model context?
-5. Which changes received substantive human review?
-6. Can the implementation be independently explained?
-7. Does any implementation substantially resemble restricted source?
-8. Does the relevant upstream project permit the proposed contribution?
-
-Missing records must be classified as `UNKNOWN`.
-
-### Human accountability
-
-Human review should cover:
-
-- Correctness
-- Licensing
-- Memory safety
-- Synchronization
-- Error handling
-- Maintainability
-- Coding standards
-- Security
-- Hardware ownership
-- Provenance
-
-**A completed independent human audit is not claimed here.**
-
-## 15. Source-to-implementation traceability
-
-A future audit should associate each implementation component with its evidence and review status.
-
-Suggested fields:
-
-| Field | Description |
-|---|---|
-| Component | Driver subsystem |
-| File | Implementation source |
-| Commit | Implementation revision |
-| Historical references | Relevant sources |
-| License status | Reviewed / Pending / Blocked |
-| AI involvement | Known / None documented / Unknown |
-| Human reviewer | Reviewer identity if completed |
-| Evidence | Tests and reports |
-| Similarity audit | Review outcome |
-| Final status | Approved / Needs work / Blocked |
-
-Important components include:
-
-- NIR lowering
-- USSE encoding
-- PDS construction
-- Gallium frontend
-- Texture sampling
-- Raster state
-- Memory management
-- Kernel ioctls
-- Submission and retirement
-- Resource lifetime
-- Presentation
-- Error recovery
-
-Passing tests does not automatically establish acceptable source provenance.
-
-## 16. Test provenance
-
-The project maintains extensive historical and current test records.
-
-Tests should be classified as:
-
-- Static analysis
-- Unit tests
-- Offline simulations
-- Compiler validation
-- Physical GPU experiments
-- Recovery tests
-- Application tests
-
-Each important result should record:
-
-- Test ID
-- Date
-- Hardware
-- Software revision
-- Inputs
-- Expected result
-- Observed result
-- Status
-- Artifact location
-- Hash
-- Reproduction instructions
-- Limitations
-
-The project's large local evidence archive is not automatically equivalent to a fully published, independently verified test corpus.
-
-Test volume does not establish copyright provenance.
-
-## 17. Upstream preparation
-
-The following checklist is a proposed project audit gate, not a claim that every upstream project imposes identical requirements.
-
-- [ ] Verify exact historical source licenses.
-- [ ] Review all quarantined materials.
-- [ ] Complete source-to-implementation traceability.
-- [ ] Audit AI-generated implementation code.
-- [ ] Perform substantive human code review.
-- [ ] Review NIR/USSE compiler correctness.
-- [ ] Review kernel safety and ownership.
-- [ ] Verify build integration.
-- [ ] Publish reproducible test summaries.
-- [ ] Document unsupported functionality.
-- [ ] Review applicable upstream AI policies.
-- [ ] Resolve or disclose outstanding provenance issues.
-- [ ] Seek maintainer guidance where necessary.
-
-No item should be marked complete without evidence.
-
-## 18. Known unresolved questions
-
-1. Exact licensing of every consulted historical DDK revision.
-2. Redistribution authorization for all mirrored materials.
-3. Complete AI-generated code provenance.
-4. Whether restricted material entered any LLM context.
-5. Whether current implementation resembles restricted historical code.
-6. Authentication of historical binary/kernel pairings.
-7. Independent human audit completion.
-8. Compatibility with applicable Mesa and Linux contribution policies.
-
-These questions must remain open until supported by evidence.
-
-## 19. Existing project evidence
-
-Important audit entry points:
+- Historical source archaeology with exact commits and file hashes.
+- Static ELF inspection and targeted disassembly.
+- Vendor-oracle queries, including the USSE decoder described above.
+- Independently authored byte-layout and semantic-constraint models.
+- NIR/USSE compiler tests and negative-case validation.
+- Controlled physical GPU submissions and readback comparisons.
+- Kernel ownership, retirement, memory-guard and recovery experiments.
+
+Evidence must be scoped correctly:
+
+| Evidence | Supports | Does not automatically support |
+|---|---|---|
+| Historical source | Properties of the inspected revision | Identity of installed binaries |
+| Vendor decoder text | Vendor interpretation of input words | Correct physical GPU execution |
+| Offline model | Behavior of the tested software model | Real hardware correctness |
+| Physical readback | Output of that particular experiment | General application compatibility |
+| Unit-test pass | Tested software invariants | Copyright provenance or upstream eligibility |
+
+Use `CONFIRMED`, `INFERRED`, `UNKNOWN`, `BLOCKED`, `PASS`, and `FAIL` with explicit test scope. A one-draw result is not a claim of continuous rendering or OpenGL conformance.
+
+## 8. AI-assisted development disclosure
+
+reMESA has used extensive LLM assistance for source archaeology, searching and comparing code, documentation, implementation and debugging. Human maintainers remain accountable for submissions and claims.
+
+This document does **not** assert that model training data can be reconstructed or that generated code is necessarily free of proprietary influence. In particular, the use of vendor-decoder output must be accounted for in any source-to-implementation audit.
+
+For each significant component, record:
+
+- Current file and implementation commit.
+- Source references and exact license scope.
+- Known LLM tools and input context, where records survive.
+- Whether vendor or restricted outputs were provided to a model.
+- Human review and independent explanation of the implementation.
+- Similarity review against restricted historical material.
+- Offline tests and physical qualification evidence.
+- Remaining uncertainties.
+
+Missing records should be marked `UNKNOWN`, not reconstructed from assumptions.
+
+## 9. Upstream readiness and unresolved work
+
+Before proposing substantial Mesa or Linux kernel integration, the project should:
+
+- [ ] Verify exact licensing of consulted historical DDK revisions.
+- [ ] Authenticate or explicitly qualify mirrored source provenance.
+- [ ] Resolve the exact `sgx540-reversing` acquisition URL, commit and artifact identity.
+- [ ] Check the Imagination SDK compiler's redistribution terms.
+- [ ] Keep the vendor-oracle binary separate from any open-source driver release unless distribution is authorized.
+- [ ] Audit how vendor-decoder output informed the USSE implementation and LLM inputs.
+- [ ] Review source-to-implementation lineage and potential restricted-code similarity.
+- [ ] Complete substantive human review of kernel and Mesa code.
+- [ ] Provide reproducible build, correctness, ownership and recovery evidence.
+- [ ] Document remaining normal DRI/GLX, presentation and application limitations accurately.
+- [ ] Check applicable Mesa and kernel contribution policies, including AI-related rules.
+- [ ] Obtain maintainer feedback without representing incomplete checks as completed certification.
+
+## 10. Primary project records
 
 - [`docs/source-archaeology.md`](docs/source-archaeology.md)
+- [`docs/poulsbo-data/sources.json`](docs/poulsbo-data/sources.json)
 - [`docs/phase7/source-index.json`](docs/phase7/source-index.json)
 - [`docs/phase7/source-provenance.md`](docs/phase7/source-provenance.md)
 - [`docs/phase7/xpsb-re/source-provenance.md`](docs/phase7/xpsb-re/source-provenance.md)
@@ -560,51 +285,16 @@ Important audit entry points:
 - [`docs/phase7/psb-dri-re/cleanroom-backing-contract.md`](docs/phase7/psb-dri-re/cleanroom-backing-contract.md)
 - [`docs/phase9/USSE-VENDOR-ORACLE-20261027.md`](docs/phase9/USSE-VENDOR-ORACLE-20261027.md)
 - [`docs/phase9/PDS-CROSS-CORE-20261031.md`](docs/phase9/PDS-CROSS-CORE-20261031.md)
-- [`docs/history/PROJECT-HISTORY.md`](docs/history/PROJECT-HISTORY.md)
 - [`projects/sgx544/docs/PROVENANCE.md`](projects/sgx544/docs/PROVENANCE.md)
 
-## 20. External references
+## 11. Final statement
 
-### Texas Instruments
+reMESA maintains substantial records of historical sources, binary identities, hardware experiments and AI-assisted development. These are valuable foundations for independent review. They are **not** proof that all implementation code has been audited, that every historical artifact may be redistributed, or that no restricted material influenced AI-assisted changes.
 
-- Kernel DDK: https://git.ti.com/cgit/graphics/omap5-sgx-ddk-linux/
-- User-mode DDK: https://git.ti.com/cgit/graphics/omap5-sgx-ddk-um-linux/
+The Imagination USSE decoder is accurately described as **original vendor functionality invoked through a research shim**. The developer reports an acquisition route through `sgx540-reversing`; the included package separately identifies the original PowerVR SDK 3.5 executable. Neither fact should be erased or conflated.
 
-### Linux and historical Poulsbo
-
-- https://github.com/gregkh/linux
-- https://github.com/gregkh/psb-kmp
-
-### Intel EMGD community
-
-- https://github.com/EMGD-Community/intel-binaries-linux
-
-### Mesa
-
-- https://gitlab.freedesktop.org/mesa/mesa
-
-### reMESA
-
-- https://github.com/reMESA-devgroup/reMESA
-
-## 21. Final statement
-
-reMESA is an experimental, extensively AI-assisted reverse-engineering and graphics-driver development project.
-
-Its historical research records include identifiable repositories, source revisions, binary hashes, technical observations, software models, and physical hardware experiments.
-
-The project also documents encounters with proprietary, restricted, and potentially confidential material, including quarantine and exclusion decisions.
-
-These records provide a foundation for provenance auditing.
-
-However, they do not independently establish that every implementation change has acceptable provenance, that no restricted material influenced LLM-generated code, or that the driver satisfies the contribution requirements of Mesa or the Linux kernel.
-
-**reMESA does not claim completed independent clean-room certification.**
-
-The intended standard is transparent provenance, reproducible evidence, human accountability, and explicit disclosure of unresolved questions.
+**No completed independent clean-room certification is claimed.** Outstanding licensing, provenance, implementation and upstream-policy questions remain open until supported by reviewable evidence.
 
 ---
 
-**Maintenance note:** Material changes to this document should identify supporting source revisions, evidence IDs, or review records.
-
-**License note:** This document does not modify the licenses of third-party materials or existing project code.
+*Maintenance: update material claims with source identifiers, commits, hashes, experiment IDs or review records. This document does not alter third-party licenses.*
