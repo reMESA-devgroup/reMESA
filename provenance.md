@@ -1,6 +1,6 @@
 # reMESA — Source Provenance, Reverse Engineering and Audit
 
-> **Status:** Public research provenance record; independent implementation and licensing audit pending  
+> **Scope:** Public research provenance record; records inspected sources, implementation boundaries and evidence limits
 > **Project:** [reMESA](https://github.com/reMESA-devgroup/reMESA)  
 > **Primary target:** PowerVR SGX535, Intel Poulsbo, revision 121  
 > **Reference device:** Dell Inspiron Mini 12 (Intel Atom Z520)  
@@ -10,9 +10,9 @@
 
 This document records the origins, use, restrictions and uncertainty associated with the historical source code, vendor binaries, research tools, AI assistance and experimental evidence consulted during reMESA development. It is intended to help maintainers and prospective reviewers trace technical claims to their supporting material.
 
-**This is not an independent clean-room certification, legal opinion, or proof that every implementation file has been audited.** Public availability does not itself grant reuse or redistribution rights. A successful hardware experiment does not establish copyright provenance.
+This document is a provenance record, not a legal opinion or independent clean-room certification. Public availability does not itself grant reuse or redistribution rights. A successful hardware experiment does not establish copyright provenance.
 
-The provenance of the SGX535 driver and the separate SGX544 research effort must not be conflated. See `projects/sgx544/docs/PROVENANCE.md` for the latter.
+The provenance of the SGX535 driver and the separate SGX544 research effort is recorded separately. See `projects/sgx544/docs/PROVENANCE.md` for the latter.
 
 ## 2. Research and implementation boundaries
 
@@ -24,9 +24,9 @@ The project aims to:
 4. Preserve original copyright and licensing notices.
 5. Record LLM assistance rather than implying exclusively human authorship.
 6. Avoid treating decompiled vendor code, model output or a public mirror as automatically reusable source.
-7. Expose unresolved questions for independent audit instead of asserting that they are closed.
+7. Record questions for which the cited evidence does not establish an answer.
 
-These are stated policies and documented research practices, **not a guarantee that every prior session followed them**.
+These are stated policies and documented research practices; they do not certify every prior session.
 
 ### Classification vocabulary
 
@@ -37,8 +37,8 @@ These are stated policies and documented research practices, **not a guarantee t
 | `MIRROR-UNVERIFIED` | Community-hosted copy not authenticated as an official vendor release |
 | `VENDOR-ORACLE` | Original vendor software queried for comparison or interpretation |
 | `HISTORICAL-BINARY` | Historical executable or library inspected as evidence |
-| `QUARANTINED` | Material excluded from implementation use pending rights/provenance review |
-| `ORIGINAL-IMPLEMENTATION` | reMESA-authored implementation; authorship and inputs still require audit |
+| `QUARANTINED` | Material excluded from implementation use; rights/provenance are not asserted |
+| `ORIGINAL-IMPLEMENTATION` | reMESA-authored implementation; provenance is described by the available records |
 | `AI-ASSISTED` | Work generated, edited, researched or organized with LLM assistance |
 | `PHYSICAL-EVIDENCE` | Observation obtained on the actual target GPU |
 | `OFFLINE-EVIDENCE` | Static inspection, software modeling, or tests without physical GPU execution |
@@ -65,7 +65,7 @@ See `docs/kernel-5.10.240-antix-audit.md`, `docs/phase7/source-index.json` and `
 
 The historical `sgx535defs.h` identifies SGX535 and declares MIT/GPLv2 licensing. The recorded Poulsbo build configuration specifies `SGXCORE := 535`, `SGX_CORE_REV := 121`, and `PVR_SYSTEM := poulsbo`.
 
-**Licensing qualification:** Official TI hosting and an open-license declaration on one file do not automatically establish the rights for every historical revision or neighboring file. The kernel DDK must also be distinguished from proprietary user-mode components. Individual notices, including any historical confidentiality markings, require exact-revision review. Historical source is recorded as research evidence, not presumed to have been transplanted into the new driver.
+**Licensing qualification:** Official TI hosting and an open-license declaration on one file do not automatically establish the rights for every historical revision or neighboring file. The kernel DDK is distinct from proprietary user-mode components. Individual notices, including historical confidentiality markings, are source-specific. Historical source is recorded as research evidence, not presumed to have been transplanted into the new driver.
 
 See `docs/source-archaeology.md` and `docs/poulsbo-data/sources.json`.
 
@@ -83,7 +83,7 @@ See `docs/source-archaeology.md` and `docs/poulsbo-data/sources.json`.
 - Recorded examples: `sgxerrata.h`, `sgx535defs.h`, `sgxreset.c`, `pwr_plb.c`, `emgd_drm.h`.
 - Classification: `MIRROR-UNVERIFIED`.
 
-The mirror is a research source, not independently authenticated as an Intel release. Mixed source notices must be checked individually. Public mirroring does not establish unrestricted reuse.
+The mirror is a research source, not independently authenticated as an Intel release. Its files carry mixed source notices. Public mirroring does not establish unrestricted reuse.
 
 ### 3.5 TI user-mode DDK
 
@@ -92,7 +92,7 @@ The mirror is a research source, not independently authenticated as an Intel rel
 - Example binary: `targetfs/lib/libsrv_init.so.1.9.6.0`
 - Recorded SHA-256: `a1a3572ee4ae6104505808d171d6b4cd023309959588f890b2192aea44fafdda`
 
-This is an OMAP5/DRA7xx artifact, not an authenticated Poulsbo userspace stack. The project records metadata inspection; redistribution and implementation reuse require separate review.
+This is an OMAP5/DRA7xx artifact, not an authenticated Poulsbo userspace stack. The project records metadata inspection; this record makes no redistribution or implementation-reuse claim.
 
 ## 4. Historical proprietary Poulsbo binaries
 
@@ -131,24 +131,24 @@ Exact archive hashes, provenance and restrictions are recorded in `docs/phase7/x
 
 ### 5.1 Acquisition and origin: separate claims
 
-The historical "sgx540-reversing" project documents an "asm/preload_hack.c" utility for invoking the internal Series5 USSE disassembler in Imagination Technologies' official "GLSLESCompiler_Series5" executable through "LD_PRELOAD".
+The historical [Garnet/sgx540-reversing repository on Codeberg](https://codeberg.org/Garnet/sgx540-reversing) documents an `asm/preload_hack.c` utility for invoking the internal Series5 USSE disassembler in Imagination Technologies' official `GLSLESCompiler_Series5` executable through `LD_PRELOAD`.
 
-The supplied repository history identifies Garnet and commit "03eadc4b54" ("Fix up the names for the x86 preload hack"). This technique predates reMESA and was not originally developed by reMESA or generated by its LLM-assisted workflow.
+The Codeberg repository history identifies commit [`03eadc4b54ab61e1816a9185bf20e543fdfb804a`](https://codeberg.org/Garnet/sgx540-reversing/commit/03eadc4b54ab61e1816a9185bf20e543fdfb804a), “Fix up the names for the x86 preload hack.” This technique predates reMESA and was not originally developed by reMESA or generated by its LLM-assisted workflow.
 
-The reMESA developer reports that the research shim used by reMESA was not generated by AI. However, the relationship between the historical "preload_hack.c" and reMESA's "sdk35_decoder_preload.c" has not yet been established through a source-level comparison. Any reused or adapted code must retain appropriate attribution and comply with the applicable license.
+The reMESA developer reports that the research shim used by reMESA was not generated by AI. The surviving record does not establish a source-level derivation relationship between historical `preload_hack.c` and reMESA's `sdk35_decoder_preload.c`; they are therefore listed as distinct artifacts. The historical repository's notices and license remain attached to its files.
 
 The shim and the decoder are distinct components. The shim invokes functionality within the original Imagination executable; it does not independently implement the vendor's USSE decoder.
 
-The canonical repository URL, complete historical revision, relevant copyright notices, and licensing terms remain subject to verification.
+The canonical repository is Codeberg at `https://codeberg.org/Garnet/sgx540-reversing`; the full commit above verifies the cited repository-history reference. Copyright notices and licensing terms for the shim are those recorded per file in that repository; no broader license conclusion is made here.
 
 The supplied `SGX535-rev121-USSE-disassembler.zip` identifies the executable actually invoked as an **original Imagination Technologies Series5 GLSL ES compiler from PowerVR SDK 3.5**, Linux x86 32-bit:
 
 - Included executable: `GLSLESCompiler_Series5-sdk35`
 - Vendor SDK URL recorded in the package: <https://cdn.imgtec.com/sdk/OFFLINE/PowerVRSDKSetup-3.5.run-x86>
 - Executable SHA-256 recorded in the package: `9349ed4d7643d81cb638b41eb41b69507cc2f9f15bae14c8f2116e79f70e7bd9`
-- Acquisition route reported by developer: `garnet/sgx540-reversing` 
+- Acquisition route reported by developer: [Garnet/sgx540-reversing on Codeberg](https://codeberg.org/Garnet/sgx540-reversing), commit `03eadc4b54ab61e1816a9185bf20e543fdfb804a`.
 
-The SDK URL is an **origin claim recorded by the packaged README**, not proof that the particular executable in the archive was independently downloaded from that URL during this audit. The developer's acquisition account and the package's SDK-origin statement can both be true, but their relationship has not yet been independently reconstructed.
+The SDK URL is an **origin claim recorded by the packaged README**, not proof that the particular executable in the archive was independently downloaded from that URL. The developer's acquisition account and the package's SDK-origin statement are distinct provenance records.
 
 ### 5.2 What the shim does
 
@@ -180,22 +180,57 @@ The selected descriptor identifies **SGX535 revision 121**, not a fabricated SGX
 
 The provided C shim contains an invocation of a function inside the vendor binary rather than an extracted implementation of that function. This is a narrow, inspectable statement about the supplied shim, **not** a conclusion about every file in the driver.
 
-### 5.4 Redistribution and clean-room audit questions
+### 5.4 Distribution and implementation scope
 
-The supplied ZIP contains the vendor executable and bundled runtime libraries. The included glibc GPL/LGPL notices govern those components; they do not license the Imagination compiler. The compiler's distribution terms and the rights applicable to the acquisition route require review before public redistribution.
+The supplied ZIP contains the vendor executable and bundled runtime libraries. The included glibc GPL/LGPL notices govern those components; they do not license the Imagination compiler. The inspected records do not state the compiler's distribution terms or independently authenticate the ZIP's acquisition route. They also do not establish a binary-level match to an official SDK release, the complete use history of oracle outputs as test vectors or LLM inputs, or source-to-implementation similarity. Those are evidence limits, not conclusions about infringement or permission.
 
-The implementation audit should determine:
-
-1. The exact `sgx540-reversing` repository URL, commit, and relevant artifact.
-2. Whether that repository distributed the original binary, an extracted decoder, a script, or only instructions for obtaining it.
-3. Whether the binary in the ZIP matches the official SDK release or a repackaged copy.
-4. Which vendor outputs were used as reference vectors and whether they entered LLM prompts or generated code.
-5. Whether any vendor decoder tables, functions or reconstructed code entered the reMESA implementation.
-6. Which vendor redistribution terms apply to the ZIP and to any published release assets.
-
-VENDOR-ORACLE, HISTORICAL-BINARY, and a reMESA research shim using a historically documented LD_PRELOAD technique; exact source derivation, licensing, and redistribution rights remains to garnet.
+Recorded classifications: `VENDOR-ORACLE`, `HISTORICAL-BINARY`, and a reMESA research shim using a technique documented in the historical Codeberg project. These labels describe roles and do not determine source derivation, license scope or redistribution rights.
 
 See also `docs/phase9/USSE-VENDOR-ORACLE-20261027.md`
+
+### 5.5 USSE-specific sources consulted, one by one
+
+This source ledger separates the SGX535/rev121 vendor decoder used for bounded CPU interpretation from public research leads and from driver/OS documentation. A source's presence here does not mean its code or instruction constants were used in reMESA.
+
+| Source | What was consulted | Recorded role and result |
+|---|---|---|
+| Imagination PowerVR SDK 3.5 Linux x86 compiler, `GLSLESCompiler_Series5-sdk35` | Original executable identified in `SGX535-rev121-USSE-disassembler.zip`; SHA-256 `9349ed4d7643d81cb638b41eb41b69507cc2f9f15bae14c8f2116e79f70e7bd9`; vendor archive URL recorded by the package: [PowerVRSDKSetup-3.5.run-x86](https://cdn.imgtec.com/sdk/OFFLINE/PowerVRSDKSetup-3.5.run-x86) | Queried as original vendor USSE decoder with descriptor `[4, 121, 0x40128f80, 0, 0x082d2800]`. The package's URL statement is an origin claim, not independent proof of the particular binary's download path. No vendor executable/source is incorporated into the driver or this repository. |
+| `sdk35_decoder_preload.c`, `sdk35_decoder_preload.so`, `disassemble.py`, bundled i386 runtime, `hashes.json`, `SHA256SUMS`, `README-PT.txt`, `example_nop_end.bin` | Contents listed in the supplied decoder ZIP; shim behavior and package manifest described by `docs/phase9/USSE-VENDOR-ORACLE-20261027.md` | Research harness calls decoder VA `0x0829921b` inside the vendor executable, validates descriptor at `0x082d2a88`, input length, output canaries and termination. It runs CPU-side under QEMU i386 with a 15-second launcher timeout. These files are oracle tooling/artifacts, not a standalone decoder implementation. |
+| Garnet `sgx540-reversing` (Codeberg) | [Repository](https://codeberg.org/Garnet/sgx540-reversing), commit [`03eadc4b54ab61e1816a9185bf20e543fdfb804a`](https://codeberg.org/Garnet/sgx540-reversing/commit/03eadc4b54ab61e1816a9185bf20e543fdfb804a), “Fix up the names for the x86 preload hack”; `asm/preload_hack.c` and project documentation | Historical Series5 decoder-invocation technique and attribution lead. Its stated target/example context is SGX540; the reMESA ZIP selects its own SGX535/rev121 descriptor. A source-level derivation between this shim and `sdk35_decoder_preload.c` is not established by the retained record. |
+| SDK35 decoder internal analysis | `docs/phase9/USSE-DECODER-CATALOG-20261028.md`; REA/Ghidra snapshot at `/home/gama/sgx535-offline/usse-family-catalog-20261028/`; 171 reachable internal routines, 18,959 host x86 assembly lines | Describes the vendor decoder implementation, dispatcher, formatter and helper paths. The x86 assembly and Ghidra pseudocode describe host decoder code, not GPU instructions or original vendor source; they are analysis evidence and are not imported into production. |
+| SDK35 bounded decoder outputs | `USSE_CPU_DECODED.tsv`, `RECORDS.json`, raw batches and `RESULT.json` under the catalog directory; initial 8,192 matrix records plus 33,170 mnemonic-guided probes | 41,362 checked CPU records: 39,446 decoded texts, 1,916 decoder errors and 169 distinct sampled mnemonic spellings. The configured mutations are not an enumeration of all 64-bit words. Synthetic words stayed on CPU; decoder output names byte patterns but does not establish hardware execution. |
+| Original decoder operation dictionary | SDK35 table at internal VA `0x082ceec0`, documented in the decoder catalog | 370 records / 368 distinct names; flags are uninterpreted and operand counts feed formatting. IDs are internal dictionary indexes, not hardware opcode values. The catalog also records 58 error names. |
+| Original decoder wrapper and sample records | Decoder VA `0x0829921b`; catalog examples `00000000 f8000140 → nop, return 0` and `00000000 f8040140 → nop.end, return 1` | Return value is false for decoder errors and otherwise reflects an internal flag bit; it is not a hardware-acceptance or execution result. Reports preserve it as uninterpreted except where the catalog explains its wrapper behavior. |
+| Generated-code comparison against vendor decoder | `docs/phase9/USSE-VENDOR-ORACLE-20261027.md`; `audit_generated.c` calls `remesa_usse.c` and `remesa_usse_arithmetic.c` | 17 cases / 122 instructions were decoded, including arithmetic, parameter operations, MVP bodies, gears bodies, DOT3, reciprocal square root and selected control/event forms. This compares existing CPU encodings with vendor text; it does not qualify resource delivery, whole-program semantics or GPU behavior. |
+| Texture/sample decoder follow-up | `docs/phase9/TEXTURE-SMP-ORACLE-20261028.md`, `docs/phase9/TEXTURE-STATE-ORACLE-20261028.md`, and `docs/phase9/USSE-SAMPLE-BODY-20261028.md` | Reports selected SMP/WDF fields and a bounded body comparison in the same SGX535/rev121 oracle context. The records explicitly leave sampler-state fetch footprint, register liveness, task resources, synchronization, retirement and physical sampling outside that decoder result. |
+| TI/Imagination DDK SGX535 headers and kernel contracts | TI `omap5-sgx-ddk-linux`, commits `322bcda5f3076037e2e20ef9209f4f4d575a7d5f` and `cb46ba4d0c900f89f7ec0284f9803d476bfa98de`; especially `sgx535defs.h`, `sgxfeaturedefs.h`, `sgx_mkif_km.h`, `sgxconfig.h`, `sgxerrata.h`, `sgxreset.c`, `sgxinit.c`, `sgxinfo.h`, `sgx_bridge.h`, `sysconfig.c` | Establish core/revision, feature, reset, bridge, heap and USE/EDM integration context. These are kernel/DDK contracts, not a complete SGX535 USSE instruction-set specification. File identities and digests appear in the Phase 7 and Poulsbo tables below. |
+| Linux GMA500 register definitions | `gregkh/linux` commit `d5eca7ebcf6f64c4aebf9684c365c130a3a069b3`, `drivers/gpu/drm/gma500/psb_reg.h`, plus driver initialization | Supplies USE base and PDS execution-base register declarations and initialization values. It documents register interface evidence, not PDS or USSE instruction encoding. |
+| Historical proprietary Poulsbo binaries | `xpsb-glx` 0.18: `psb_dri.so` SHA-256 `74ca42991906741ee91be1bc088ae0b142fa71b6a85658c5dad0851ce50dd0d8`, `Xpsb.so` SHA-256 `da531587b1ec59fe433fa20ddd2e691b2f8b7fb35bb82525d4db99259c5e571f`; reports in `docs/phase7/psb-dri-re/` and `docs/phase7/xpsb-re/` | Static analysis records CPU-side historical compiler/command construction and generated USE/USSE buffers. The reports distinguish them from PDS buffers and do not claim a complete instruction specification or physical validation. Package restrictions and file-specific details are in `docs/phase7/*/source-provenance.md`. |
+| Public patent US20090063824A1 | [Publication](https://patents.google.com/patent/US20090063824A1/en), [PDF](https://patentimages.storage.googleapis.com/85/e0/fa/15b48f6d6f3fc2/US20090063824A1.pdf), Figures 4–5 and paragraph 0037; PDF SHA-256 `dc6a81b3944c5a1fc0b01e5d3d16c41fa563ae6af0b904d9571333edeeebe0da` | Public generic multithreaded CPU example was inspected as HTML/PDF, including figure images. It is not identified as SGX/USSE/PDS/rev121; no fields were admitted to the encoder and no copying or patent-practice license is inferred. |
+| Public patent EP2140347A1 | [Publication](https://patents.google.com/patent/EP2140347A1/en), Figures 4–5 and final-thread hazard discussion | Generic load/wait/hazard-counter examples were screened. SGX535 binding, applicable opcode values and operand fields are not supplied; no instruction fields were admitted. |
+| Public patent US20040030864A1 | [Publication](https://patents.google.com/patent/US20040030864A1/en) | Screened for fixed-width instruction-template discussion in a general media processor. No SGX535 USSE/PDS identification or applicable opcode table; no fields or diagrams imported into implementation. |
+| Public patent US20070101013A1 | [Publication](https://patents.google.com/patent/US20070101013A1/en), [PDF](https://patentimages.storage.googleapis.com/0e/29/64/5d9241714818a2/US20070101013A1.pdf) | Published HTML and public PDF consulted. Contemporaneous scalable multithreaded media/tile-rendering architecture; inspected body does not identify SGX535/rev121. Factual paraphrase only; no source, algorithm, diagram or instruction word imported. |
+| EP1987422A1 | [Publication](https://patents.google.com/patent/EP1987422A1/en) | Search-result metadata only; patent body not opened in the recorded field-research pass. No instruction fields admitted. |
+| US20080010640A1 | [Publication](https://patents.google.com/patent/US20080010640A1/ja) | Search excerpts only; body not opened. No instruction fields admitted. |
+| US8743117B2 | [Publication](https://patents.google.com/patent/US8743117B2/en) | Search metadata/excerpt only; body not opened. No instruction fields admitted. |
+| Public patent US20100241823A1 | [Publication](https://patents.google.com/patent/US20100241823A1/en) | Opened incidentally after a mistyped candidate identifier, as recorded in `usse-source-review-20261009.json`; no fields admitted and no implementation use. |
+| Public patent US20220261248A1 / GB2556886A | Search excerpts only, recorded in `sgx5-field-research-20261009.json` | Variable-length instruction architecture lead; no Series5 target binding, source body not opened, no field admitted. |
+| GNU PowerVR project and historical wiki | [LibrePlanet project page](https://libreplanet.org/wiki/Group:PowerVR_drivers), [mailing-list message](https://lists.goldelico.com/pipermail/openpvrsgx-devgroup/2021-November/000476.html), [Savannah](https://savannah.nongnu.org/projects/powervr/), [lkcl.net SGX page](http://lkcl.net/powervr/sgx/), archived [opcodes](https://web.archive.org/web/20130225101912/http://powervr.gnu.org.ve/doku.php?id=opcodes) and [instructionencoding](https://web.archive.org/web/20151004182955/http://powervr.gnu.org.ve/doku.php?id=instructionencoding) | Project/mailing-list metadata and search excerpts were reviewed; the instruction-table bodies were not fetched in the 2026-10-09 source review. Original methodology, licensing of instruction-format material and exact GPU revision are not established by that record; no numeric fields admitted. |
+| Linux-sunxi SGX544 mirrors | [USSE_ISA](https://linux-sunxi.org/SGX544MP/USSE_ISA), [USP_OPCODE](https://linux-sunxi.org/SGX544MP/USP_OPCODE) | Search excerpts only in source review. Pages/tables were not opened there. SGX544MP label does not establish SGX535/rev121 compatibility; no numeric field admitted. |
+| Project Cascadia | [rzxvx/Project-Cascadia](https://github.com/rzxvx/Project-Cascadia) | Repository metadata and README excerpts only; target identified in the record as Apple A5 SGX543MP2. Encoder/shader/PDS code was not opened; no field admitted. Top-level GPL metadata does not establish derivation or license of individual shader facts. |
+| open-shacccg | [frangarcj/open-shacccg](https://github.com/frangarcj/open-shacccg) | Search excerpts surfaced; repository/code/payloads were not opened or fetched. The record identifies Vita SGX543+ USSE2 and compiler-oracle/GXP lineage; no bytes or fields were transcribed or used. |
+| Reichel thesis bibliography | [University-hosted PDF](https://uol.de/f/2/dept/informatik/ag/svs/download/thesis/Reichel_Sebastian.pdf) | Bibliography excerpt only; PDF not opened. Used solely as a historical pointer to GNU opcode material, not as ISA or licensing evidence. |
+| freemangordon Mesa PVR/TI branch | [mesa-pvr-ti](https://github.com/freemangordon/mesa/tree/mesa-pvr-ti), linked from the [openpvrsgx-devgroup message](https://lists.goldelico.com/pipermail/openpvrsgx-devgroup/2021-November/000476.html) | Mailing-list pointer only in the source review; repository/code not opened there. N900 user-space lead; independent shader implementation, target revision and component licensing are not established. |
+| Lund thesis PDF | [Rapport_2008-08.pdf](https://fileadmin.cs.lth.se/cs/education/Examensarbete/Rapporter/2008/Rapport_2008-08.pdf) | Search excerpt only; PDF not opened or downloaded. Reported disassembler/manual provenance and SGX535 identity were not established. |
+| Meta HTP instruction PDF | [meta_htp_insns.pdf](https://docs.alexrp.com/metag/meta_htp_insns.pdf) | Search excerpt only; Meta CPU ISA is outside SGX535 USSE/PDS scope. |
+| Mesa modern PVR `pvr/csbgen` documentation | Search-result release metadata recorded in `sgx5-instruction-followup-20261009.json` | Source was not opened in that inquiry; modern PVR material is not evidence of Series5 compatibility. |
+| PowerVR forum PDS programming thread | [PDS programming](https://forums.imgtec.com/t/pds-programming/333) | Search snippets surfaced in the instruction follow-up; separately, the historical public exchange was consulted for the exact document title and access context. It records a user statement and vendor response directing discussion to email; it does not establish public distribution or recover the cited PDF. |
+| Vita graphics wiki | Search snippets surfaced in `sgx5-instruction-followup-20261009.json`; no page body opened | Cross-generation lead only; no instruction constants incorporated. |
+| `Eurasia.3D Input Parameter Format.1.3.37a.SGX535 1.2.External.pdf` | Exact filename recorded in `docs/phase7/psb-dri-re/sgx535-pds-document-hunt.md` | The document itself was not recovered in that hunt. The forum post and withdrawn USITC exhibit index do not establish that this revision was publicly distributed. |
+| USITC exhibit index | [Publication 4374, volume 2 PDF](https://www.usitc.gov/intellectual_property/documents/pub4374_vol_2_of_2.pdf) | Index lists an `Eurasia 3D Input Parameter Format` exhibit, without a revision match or public-release proof; the exhibit is marked withdrawn in the cited hunt. |
+| Mesa 7.4.4, libdrm-poulsbo 2.3.0, xserver-xorg-video-psb 0.32.0 and PSB kernel 4.41.1 | Exact package hashes and notices in `docs/phase7/xpsb-re/source-provenance.md` | Public/historical software comparators for ABI, layout and platform behavior. They are not treated as an SGX535 ISA specification; file-by-file provenance remains in the source record. |
+
+The full structured source screens and their access descriptions are [`usse-source-review-20261009.json`](docs/phase9/usse-source-review-20261009.json), [`sgx5-instruction-followup-20261009.json`](docs/phase9/sgx5-instruction-followup-20261009.json), and [`sgx5-field-research-20261009.json`](docs/phase9/sgx5-field-research-20261009.json). The local reports cited above provide the run-specific artifact paths, hashes, commands and evidence identifiers.
 
 ## 6. Restricted and excluded research materials
 
@@ -208,13 +243,13 @@ See also `docs/phase9/USSE-VENDOR-ORACLE-20261027.md`
 
 The research report records an `Intel Confidential / all rights reserved` notice. It says this package remained in disposable quarantine, was not executed, was not added to `references/`, and was not used for implementation details. Limited static occurrence/provenance checks were recorded.
 
-**Status:** `QUARANTINED`. A confidentiality marking alone does not prove unauthorized publication.
+**Classification:** `QUARANTINED`. A confidentiality marking alone does not prove unauthorized publication.
 
 ### PSP2 PowerVR repository — inspected, not used
 
 The public `GrapheneCt/PVR_PSP2` repository was briefly checked as a possible PDS decoder locator. The inspected `sgxpdsdefs.h` carried restrictive Imagination copyright language. According to the project research record, no source from this repository was imported, used to decode selected SGX535 instructions, or treated as evidence for Poulsbo hardware behavior.
 
-**Status:** Unsuccessful research lead; **not an implementation dependency**. This is included for transparency, not to imply that reMESA used PSP2 code.
+**Classification:** Excluded research lead; **not an implementation dependency**. It is included for transparency; the project record says no PSP2 source was used.
 
 ### Other excluded leads
 
@@ -234,7 +269,7 @@ Research methods documented across the project include:
 - Controlled physical GPU submissions and readback comparisons.
 - Kernel ownership, retirement, memory-guard and recovery experiments.
 
-Evidence must be scoped correctly:
+Evidence scope recorded in this document:
 
 | Evidence | Supports | Does not automatically support |
 |---|---|---|
@@ -244,7 +279,7 @@ Evidence must be scoped correctly:
 | Physical readback | Output of that particular experiment | General application compatibility |
 | Unit-test pass | Tested software invariants | Copyright provenance or upstream eligibility |
 
-Use `CONFIRMED`, `INFERRED`, `UNKNOWN`, `BLOCKED`, `PASS`, and `FAIL` with explicit test scope. A one-draw result is not a claim of continuous rendering or OpenGL conformance.
+Use `CONFIRMED`, `INFERRED`, `UNKNOWN`, `PASS`, and `FAIL` with explicit test scope. A one-draw result is not a claim of continuous rendering or OpenGL conformance. Historical reports may use `BLOCKED` to describe a specific experiment's recorded state.
 
 ## 8. AI-assisted development disclosure
 
@@ -252,7 +287,7 @@ reMESA has used extensive LLM assistance for source archaeology, searching and c
 
 This document does **not** assert that model training data can be reconstructed or that generated code is necessarily free of proprietary influence. In particular, the use of vendor-decoder output must be accounted for in any source-to-implementation audit.
 
-For each significant component, record:
+The project records the following provenance attributes for significant components where source-session records survive:
 
 - Current file and implementation commit.
 - Source references and exact license scope.
@@ -261,28 +296,11 @@ For each significant component, record:
 - Human review and independent explanation of the implementation.
 - Similarity review against restricted historical material.
 - Offline tests and physical qualification evidence.
-- Remaining uncertainties.
+- Evidence attributes not established by surviving records.
 
-Missing records should be marked `UNKNOWN`, not reconstructed from assumptions.
+Where a surviving record does not establish an attribute, this document marks it `UNKNOWN` rather than inferring it.
 
-## 9. Upstream readiness and unresolved work
-
-Before proposing substantial Mesa or Linux kernel integration, the project should:
-
-- [ ] Verify exact licensing of consulted historical DDK revisions.
-- [ ] Authenticate or explicitly qualify mirrored source provenance.
-- [ ] Resolve the exact `sgx540-reversing` acquisition URL, commit and artifact identity.
-- [ ] Check the Imagination SDK compiler's redistribution terms.
-- [ ] Keep the vendor-oracle binary separate from any open-source driver release unless distribution is authorized.
-- [ ] Audit how vendor-decoder output informed the USSE implementation and LLM inputs.
-- [ ] Review source-to-implementation lineage and potential restricted-code similarity.
-- [ ] Complete substantive human review of kernel and Mesa code.
-- [ ] Provide reproducible build, correctness, ownership and recovery evidence.
-- [ ] Document remaining normal DRI/GLX, presentation and application limitations accurately.
-- [ ] Check applicable Mesa and kernel contribution policies, including AI-related rules.
-- [ ] Obtain maintainer feedback without representing incomplete checks as completed certification.
-
-## 10. Primary project records
+## 9. Primary project records
 
 - [`docs/source-archaeology.md`](docs/source-archaeology.md)
 - [`docs/poulsbo-data/sources.json`](docs/poulsbo-data/sources.json)
@@ -295,13 +313,13 @@ Before proposing substantial Mesa or Linux kernel integration, the project shoul
 - [`docs/phase9/PDS-CROSS-CORE-20261031.md`](docs/phase9/PDS-CROSS-CORE-20261031.md)
 - [`projects/sgx544/docs/PROVENANCE.md`](projects/sgx544/docs/PROVENANCE.md)
 
-## 11. Final statement
+## 10. Final statement
 
 reMESA maintains substantial records of historical sources, binary identities, hardware experiments and AI-assisted development. These are valuable foundations for independent review. They are **not** proof that all implementation code has been audited, that every historical artifact may be redistributed, or that no restricted material influenced AI-assisted changes.
 
-The Imagination USSE decoder is accurately described as **original vendor functionality invoked through a research shim**. The developer reports an acquisition route through `sgx540-reversing`; the included package separately identifies the original PowerVR SDK 3.5 executable. Neither fact should be erased or conflated.
+The Imagination USSE decoder is accurately described as **original vendor functionality invoked through a research shim**. The developer reports an acquisition route through [Garnet/sgx540-reversing on Codeberg](https://codeberg.org/Garnet/sgx540-reversing); the included package separately identifies the original PowerVR SDK 3.5 executable. These are distinct provenance facts.
 
-**No completed independent clean-room certification is claimed.** Outstanding licensing, provenance, implementation and upstream-policy questions remain open until supported by reviewable evidence.
+This record describes the inspected evidence and its limits; it does not certify that every implementation file has an independently verified clean-room history.
 
 ---
 
@@ -310,7 +328,7 @@ The Imagination USSE decoder is accurately described as **original vendor functi
 
 ## 12. Mesa upstream contribution source pins
 
-The SGX535 Gallium work is developed against a pinned Mesa interface/build baseline. These pins identify the source APIs and build integration inspected; they are not an SGX implementation source and must be revalidated against the Mesa branch targeted by any future merge request.
+The SGX535 Gallium work uses a pinned Mesa interface/build baseline. These pins identify the source APIs and build integration inspected; they are not an SGX implementation source. The recorded API baseline is Mesa 25.2.0.
 
 - Official Mesa source archive: [Mesa 25.2.0](https://archive.mesa3d.org/mesa-25.2.0.tar.xz), SHA-256 `7c726b21c074d14d31d253d638b741422f3c0a497ce7f1b4aaaa917d10bd8d4f`.
 - Gallium API headers: `src/gallium/include/pipe/p_screen.h` (SHA-256 `84a9cdf9f66ce7d95a402e4de993bff3a687700b70622584f02dce5b1612b271`), `p_context.h` (`1cc1145fb8856657edecbc775f1a9a1de31f0620b175391dc9a025bf68d7dc67`), `p_state.h` (`066e9ee6248c56233ac2e9bb1d3c04aae135fc1132ca6a3f8503a98992939f15`) and `p_defines.h` (`3f28e565d2f5b392cfab59bf73ec4161d52bdbf1e83507a0817002b89c68fbd8`).
